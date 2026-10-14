@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YOLO Object Detection</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font: 16px Arial, sans-serif;
+      background: #0f131d;
+      color: #dfe2f1;
+    }
+    body { margin: 0; padding: 24px; }
+    main { max-width: 1000px; margin: auto; }
+    h1 { color: #00e5f0; }
+    .panel {
+      background: #191e29;
+      border: 1px solid #35414c;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 18px 0;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+    }
+    .stat { background: #10151f; border-radius: 8px; padding: 14px; }
+    .stat-label, .muted { color: #9aa8b5; }
+    .stat-value { display: block; margin-top: 8px; font-size: 1.4rem; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    button {
+      background: #00dce8;
+      color: #071116;
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    #stopButton { background: #ff7373; }
+    #videoFeed { display: block; width: 100%; max-height: 65vh; object-fit: contain; }
+    #objectsList { display: grid; gap: 12px; }
+    .object-item { background: #10151f; border-radius: 8px; padding: 12px; }
+    .object-top { display: flex; justify-content: space-between; gap: 12px; }
+    .progress { height: 6px; margin-top: 10px; background: #35414c; border-radius: 4px; }
+    .progress-bar { height: 100%; background: #00dce8; border-radius: 4px; }
+    .empty-state { color: #9aa8b5; text-align: center; padding: 16px; }
+    #connectionMessage { min-height: 1.2em; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>YOLO Object Detection</h1>
+  <p id="topStatus" class="muted">Connecting to the detection backend…</p>
+
+  <section class="panel" aria-label="Detection statistics">
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-label">Detection status</span>
+        <strong id="detectionStatus" class="stat-value">Connecting…</strong>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Objects detected</span>
+        <strong id="objectCount" class="stat-value">0</strong>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Processing speed</span>
+        <strong class="stat-value"><span id="fps">0</span> FPS</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Camera feed</h2>
+    <img id="videoFeed" src="{{ url_for('video_feed') }}" alt="Live object detection camera feed">
+    <p id="connectionMessage" class="muted" role="status" aria-live="polite"></p>
+    <div class="actions">
+      <button id="startButton" type="button">Start detection</button>
+      <button id="stopButton" type="button">Stop detection</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Detected objects</h2>
+    <div id="objectsList">
+      <div class="empty-state">Waiting for detection data…</div>
+    </div>
+  </section>
+</main>
+<script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</body>
+</html>
